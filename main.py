@@ -7,31 +7,33 @@ import datetime
 def downLink(animeName, animeList):
     print('\nSearching the anime from the main page, please wait...')
     downloadlist = {}
+    animeName_ = animeName.split()
     for anime in animeList:
         title = anime.find('a')
-        if animeName.lower() in title.text.lower():
-            link = []
-            episode_url = title.get('href')
-            print('\n\033[1m'+title.text+'\033[0m\n')
-            print('Getting the anime download link, please wait...\n')
-            episode = requests.get(episode_url).text
-            soup_eps = BeautifulSoup(episode, 'lxml')
+        for name in animeName_:
+            if name.lower() in title.text.lower():
+                link = []
+                episode_url = title.get('href')
+                print('\n\033[1m'+title.text+'\033[0m\n')
+                print('Getting the anime download link, please wait...\n')
+                episode = requests.get(episode_url).text
+                soup_eps = BeautifulSoup(episode, 'lxml')
 
-            episode_page = soup_eps.find('div', class_="epsc")
-            undordered_list = episode_page.find_all('ul')
+                episode_page = soup_eps.find('div', class_="epsc")
+                undordered_list = episode_page.find_all('ul')
 
-            for ind, ul in enumerate(undordered_list):
-                if ind > 0:
-                    link_list = ul.find('li')
-                    download_link_list = link_list.find_all('a')
+                for ind, ul in enumerate(undordered_list):
+                    if ind > 0:
+                        link_list = ul.find('li')
+                        download_link_list = link_list.find_all('a')
 
-                    for dl in download_link_list:
-                        linkdetail = {}
-                        linkdetail[dl.text] = dl.get('href')
-                        link.append(linkdetail)
+                        for dl in download_link_list:
+                            linkdetail = {}
+                            linkdetail[dl.text] = dl.get('href')
+                            link.append(linkdetail)
 
-            downloadlist[animeName] = link
-            return downloadlist
+                downloadlist[animeName] = link
+                return downloadlist, title.text
     return 0
 
 
@@ -60,7 +62,7 @@ while True:
         print("\t======\n"+"\n".join(animes)+"\n\t======")
     elif inChoice == "2":
         anime_name = input('Give an anime name: ')
-        result = downLink(anime_name, animelist)
+        result, title = downLink(anime_name, animelist)
         if result == 0:
             print('\n\033[1m'+"Anime not found"+'\033[0m\n')
         else:
@@ -70,7 +72,7 @@ while True:
                 for x in link:
                     url = link[x]
                 print(f"{server} : {url}")
-                with open(f'C:/Users/Banabda/Documents/Python/Anime scraping/Result/{cdf}_{anime_name}.txt', 'a') as f:
+                with open(f'C:/Users/Banabda/Documents/Python/Anime scraping/Result/{title}.txt', 'a') as f:
                     f.write(f'{index+1}. {server} : {url}\n')
     elif inChoice == "3":
         print("Thank you! See you later! :)")

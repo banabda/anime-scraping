@@ -70,7 +70,7 @@ while True:
                 for x in link:
                     url = link[x]
                 print(f"{server} : {url}")
-                with open(f'C:/Users/Banabda/Documents/Python/Anime scraping/{cdf}_{anime_name}.txt', 'a') as f:
+                with open(f'C:/Users/Banabda/Documents/Python/Anime scraping/Result/{cdf}_{anime_name}.txt', 'a') as f:
                     f.write(f'{index+1}. {server} : {url}\n')
     elif inChoice == "3":
         print("Thank you! See you later! :)")
